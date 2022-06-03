@@ -122,34 +122,105 @@ export default {
   },
   methods: {
     // получаем категории книг
-    async getCat() {
-      const response = await fetch(
-        "http://45.8.249.57/bookstore-api/books/categories",
-        {
-          headers: { "Content-type": "application/json" },
-        }
-      );
-      const data = await response.json();
-      this.options = data;
+    // async
+    getCat() {
+      const requestURL = "http://45.8.249.57/bookstore-api/books/categories";
+
+      function sendRequest(method, url, body = {}) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+
+          xhr.open(method, url);
+
+          xhr.responseType = "json";
+          xhr.setRequestHeader("Content-Type", "application/json");
+
+          xhr.onload = () => {
+            if (xhr.status >= 400) {
+              reject(xhr.response);
+            } else {
+              resolve(xhr.response);
+            }
+          };
+
+          xhr.onerror = () => {
+            reject(xhr.response);
+          };
+
+          xhr.send(JSON.stringify(body));
+        });
+      }
+      sendRequest("GET", requestURL)
+        .then((data) => {
+          this.options = data;
+        })
+        .catch((err) => console.log(err));
+
+      // метод через async await тоже работает
+      // const response = await fetch(
+      //   "http://45.8.249.57/bookstore-api/books/categories",
+      //   {
+      //     headers: { "Content-type": "application/json" },
+      //   }
+      // );
+      // const data = await response.json();
     },
     // получаем все книги
-    async getBooks() {
+    // async
+    getBooks() {
       this.isLoad = true;
-      const response = await fetch("http://45.8.249.57/bookstore-api/books", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          get: true,
-        }),
-      });
-      const data = await response.json();
-      this.isLoad = false;
-      this.books = data;
-      this.books.forEach((b) => {
-        b.cartCount = 1;
-      });
+      const requestURL = "http://45.8.249.57/bookstore-api/books";
+
+      function sendRequest(method, url, body = {}) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+
+          xhr.open(method, url);
+
+          xhr.responseType = "json";
+          xhr.setRequestHeader("Content-Type", "application/json");
+
+          xhr.onload = () => {
+            if (xhr.status >= 400) {
+              reject(xhr.response);
+            } else {
+              resolve(xhr.response);
+            }
+          };
+
+          xhr.onerror = () => {
+            reject(xhr.response);
+          };
+
+          xhr.send(JSON.stringify(body));
+        });
+      }
+      sendRequest("POST", requestURL)
+        .then((data) => {
+          this.isLoad = false;
+          this.books = data;
+          this.books.forEach((b) => {
+            b.cartCount = 1;
+          });
+        })
+        .catch((err) => console.log(err));
+
+      // метод через async await тоже работает
+      // const response = await fetch("http://45.8.249.57/bookstore-api/books", {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     get: true,
+      //   }),
+      // });
+      // const data = await response.json();
+      // this.isLoad = false;
+      // this.books = data;
+      // this.books.forEach((b) => {
+      //   b.cartCount = 1;
+      // });
     },
     // событие добавление книг в корзину
     addToCart(book) {
