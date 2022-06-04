@@ -38,16 +38,19 @@ export default {
 }
 .cart-count {
   position: absolute;
-  top: -10px;
-  right: -5px;
+  top: -20px;
+  right: -20px;
   padding: 5px;
   border-radius: 50%;
-  background: orangered;
+  background: #589254;
   color: white;
+  min-width: 30px;
+  min-height: 30px;
+  text-align: center;
 }
 
 .books__btn {
-  border: 1px solid orangered;
+  border: 1px solid #589254;
   display: inline-block;
   -webkit-appearance: none;
   appearance: none;
@@ -55,7 +58,7 @@ export default {
   transition: all 0.3s ease;
 
   &:hover {
-    box-shadow: 0px 6px 15px -5px orangered;
+    box-shadow: 0px 6px 15px -5px #589254;
   }
 }
 </style>

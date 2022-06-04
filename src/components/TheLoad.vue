@@ -22,7 +22,7 @@ export default {
 }
 span {
   position: absolute;
-  border: 6px solid orangered;
+  border: 6px solid #589254;
   border-radius: 50%;
   animation: ripple 1.8s ease-out infinite;
 }
