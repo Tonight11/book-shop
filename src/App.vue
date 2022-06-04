@@ -265,9 +265,7 @@ export default {
         this.balance += +this.addBalance;
         let localNewBalance = localBalance + +this.addBalance;
         localStorage.setItem("balance", localNewBalance);
-        this.balanceDialog = false;
-        this.addBalance = "";
-        document.body.classList.remove("lock");
+        this.hideBalanceDialog();
       }
     },
     //  показ диалогового окна с пополнением баланса
@@ -278,6 +276,8 @@ export default {
     //  показ диалогового окна с пополнением баланса
     hideBalanceDialog() {
       this.balanceDialog = false;
+      this.addBalance = "";
+      this.balanceErr = "";
       document.body.classList.remove("lock");
     },
   },
@@ -357,6 +357,7 @@ body {
 }
 
 #app {
+  overflow-x: hidden;
   overflow-x: hidden;
 }
 
