@@ -61,10 +61,8 @@
           </Transition>
           <teleport to="body">
             <my-dialog v-if="cartDialog || notEnough">
-              <h1 v-if="notEnough">
-                Недастаточно средств! Пожалуйста пополните баланс
-              </h1>
-              <h1 v-else>Спасибо за покупку</h1>
+              <h1 v-if="notEnough">Недостаточно денег для заказа</h1>
+              <h1 v-else>Покупка прошла успешно</h1>
               <my-button text="На главную" @click="dialogHide"></my-button>
             </my-dialog>
           </teleport>
@@ -356,6 +354,10 @@ body {
   &.lock {
     overflow-y: hidden;
   }
+}
+
+#app {
+  overflow-x: hidden;
 }
 
 .wrapper {
