@@ -3,7 +3,7 @@
     <button class="btn btn-cart" @click="$emit('show-cart')">{{ text }}</button>
     <span class="cart-count">{{ total.length }}</span>
   </div>
-  <button v-else class="books__btn btn" @click.prevent="animating">
+  <button v-else class="books__btn btn">
     {{ text }}
   </button>
 </template>
@@ -11,17 +11,8 @@
 <script>
 export default {
   name: "MyButton",
+  emits: ["show-cart"],
   props: ["text", "cart", "total"],
-  methods: {
-    animating(e) {
-      e.target.classList.remove("animate");
-
-      e.target.classList.add("animate");
-      setTimeout(function () {
-        e.target.classList.remove("animate");
-      }, 700);
-    },
-  },
 };
 </script>
 

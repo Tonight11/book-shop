@@ -26,6 +26,7 @@
 import MyButton from "@/UI/MyButton";
 export default {
   name: "TheNavbar",
+  emits: ["add-balance"],
   props: ["balance"],
   components: {
     MyButton,

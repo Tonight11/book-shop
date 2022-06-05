@@ -51,6 +51,7 @@ import MyButton from "@/UI/MyButton";
 
 export default {
   name: "TheCart",
+  emits: ["cart-close", "bought"],
   props: ["cartItems", "counter"],
   components: {
     MyButton,

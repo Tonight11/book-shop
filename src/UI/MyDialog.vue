@@ -18,6 +18,7 @@
 <script>
 export default {
   name: "MyDialog",
+  emits: ["closeModal"],
   props: ["closable"],
   methods: {
     closeModal() {
