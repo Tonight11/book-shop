@@ -13,21 +13,17 @@
           <div
             class="card__column"
             v-for="(cart, index) in cartItems"
-            :key="cart.name"
+            :key="cart.title"
           >
             <div class="cart__item">
-              <img
-                :src="'http://45.8.249.57' + cart.coverUrl"
-                alt=""
-                class="cart__img"
-              />
+              <img :src="cart.book_image" alt="" class="cart__img" />
               <div class="cart__info">
                 <div class="cart__title">
-                  {{ cart.name }}
+                  {{ cart.title }}
                 </div>
                 <div class="cart__counter">{{ cart.cartCount }} шт.</div>
                 <div class="cart__price">
-                  {{ cart.price * cart.cartCount }} руб
+                  {{ cart.exactPrice * cart.cartCount }} руб
                 </div>
               </div>
               <div class="cart__delete" @click="$emit('cart-delete', index)">
@@ -68,7 +64,7 @@ export default {
     totalSum() {
       let total = 0;
       this.cartItems.forEach((c) => {
-        total += c.cartCount * c.price;
+        total += c.cartCount * c.exactPrice;
       });
       return total;
     },

@@ -2,17 +2,17 @@
   <div class="books">
     <div class="books__row" v-if="books.length">
       <transition-group name="list">
-        <div v-for="book in books" :key="book.name" class="books__column">
+        <div v-for="book in books" :key="book.title" class="books__column">
           <div class="books__item">
             <div class="books__img">
-              <img :src="'http://45.8.249.57' + book.coverUrl" alt="img" />
+              <img :src="book.book_image" alt="img" />
             </div>
             <div class="books__info">
-              <div class="books__header">{{ book.name }}</div>
-              <div class="books__author">{{ book.authorName }}</div>
+              <div class="books__header">{{ book.title }}</div>
+              <div class="books__author">{{ book.publisher }}</div>
               <div class="books__bot">
                 <div class="books__price">
-                  {{ book.price }} {{ book.countCard }} руб.
+                  {{ book.exactPrice }} {{ book.countCard }} руб.
                 </div>
                 <my-button
                   text="В Корзину"

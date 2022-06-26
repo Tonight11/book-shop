@@ -26,7 +26,6 @@
         <div class="content">
           <div class="sort">
             <my-sort v-model="sort"></my-sort>
-            <my-filter v-model="sortFilter" :options="options"></my-filter>
           </div>
           <my-input
             v-model="search"
@@ -34,7 +33,6 @@
             place="Введите название книги"
             type="text"
           ></my-input>
-
           <the-books
             :books="searchFilter"
             :load="isLoad"
@@ -83,7 +81,6 @@ import TheNavbar from "@/components/TheNavbar";
 import TheCart from "@/components/TheCart";
 import TheBooks from "@/components/TheBooks";
 import MyInput from "@/UI/MyInput";
-import MyFilter from "@/UI/MyFilter";
 import MySort from "@/UI/MySort";
 import MyButton from "@/UI/MyButton";
 import MyDialog from "@/UI/MyDialog";
@@ -93,7 +90,6 @@ export default {
   components: {
     TheNavbar,
     MyInput,
-    MyFilter,
     MySort,
     TheCart,
     TheBooks,
@@ -103,9 +99,7 @@ export default {
   data() {
     return {
       search: "",
-      sortFilter: null,
       books: [],
-      options: [],
       cart: [],
       sort: true,
       cartVisible: false,
@@ -119,79 +113,26 @@ export default {
     };
   },
   methods: {
-    // получаем категории книг
-    async getCat() {
-      // метод через xhr тоже работает
-      const response = await fetch(
-        "http://45.8.249.57/bookstore-api/books/categories"
-      );
-      const data = await response.json();
-      this.options = data;
-    },
     // получаем все книги
-    async getBooks() {
+    async getBooks() {/* eslint-disable */
       this.isLoad = true;
-
-      // метод через xhr тоже работает
-      // const requestURL = "http://45.8.249.57/bookstore-api/books";
-      //
-      // function sendRequest(method, url, body = {}) {
-      //   return new Promise((resolve, reject) => {
-      //     const xhr = new XMLHttpRequest();
-      //
-      //     xhr.open(method, url);
-      //
-      //     xhr.responseType = "json";
-      //     xhr.setRequestHeader("Content-Type", "application/json");
-      //
-      //     xhr.onload = () => {
-      //       if (xhr.status >= 400) {
-      //         reject(xhr.response);
-      //       } else {
-      //         resolve(xhr.response);
-      //       }
-      //     };
-      //
-      //     xhr.onerror = () => {
-      //       reject(xhr.response);
-      //     };
-      //
-      //     xhr.send(JSON.stringify(body));
-      //   });
-      // }
-      // sendRequest("POST", requestURL)
-      //   .then((data) => {
-      //     this.isLoad = false;
-      //     this.books = data;
-      //     this.books.forEach((b) => {
-      //       b.cartCount = 1;
-      //     });
-      //   })
-      //   .catch((err) => console.log(err));
-
-      const response = await fetch("http://45.8.249.57/bookstore-api/books", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          get: {},
-        }),
-      });
+      const API = "Zr8x1xrB6A0SQGaRAIxcydtjhUt2jirW";
+      const response = await fetch(`https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json?api-key=${API}`);
       const data = await response.json();
       this.isLoad = false;
-      this.books = data;
+      this.books = data.results.books;
       this.books.forEach((b) => {
         b.cartCount = 1;
+        b.exactPrice = Math.floor(Math.random() * (2000 - 200 + 1) + 200)
       });
     },
     // событие добавление книг в корзину
     addToCart(book) {
-      const itemInCart = this.cart.find((c) => c.name === book.name);
+      const itemInCart = this.cart.find((c) => c.title === book.title);
       if (itemInCart) {
         itemInCart.cartCount++;
         let localCount = JSON.parse(localStorage.getItem("cart"));
-        let localItem = localCount.find((i) => i.name === book.name);
+        let localItem = localCount.find((i) => i.title === book.title);
         localItem.cartCount += 1;
         localStorage.setItem("cart", JSON.stringify(localCount));
       } else {
@@ -282,32 +223,27 @@ export default {
     },
   },
   computed: {
-    // Фильтрация по категориям
-    filter() {
-      return [...this.books].filter((book) => {
-        if (this.sortFilter === null) {
-          return book;
-        } else {
-          return book.categoryId === +this.sortFilter;
-        }
-      });
-    },
     // фильтрация по цене
     sortByPrice() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return this.filter.sort((a, b) => {
+      return [...this.books].sort((a, b) => {
         if (this.sort === true) {
-          return a.price - b.price;
+          return a.exactPrice - b.exactPrice;
         }
         if (this.sort === false) {
-          return b.price - a.price;
+          return b.exactPrice - a.exactPrice;
         }
       });
     },
-    // фильтрация по поиску
+    // // фильтрация по поиску
     searchFilter() {
-      return this.sortByPrice.filter((f) =>
-        f.name.toLowerCase().includes(this.search.toLowerCase())
+      return this.sortByPrice.filter((f) => {
+          if (this.search.length) {
+              return f.title.toLowerCase().includes(this.search.toLowerCase());
+          } else {
+              return f
+          }
+          }
       );
     },
   },
@@ -316,7 +252,6 @@ export default {
     document.body.classList.remove("lock");
     // вызываем функции получения книг
     this.getBooks();
-    this.getCat();
     // сохраняем баланс в localStorage
     if (JSON.parse(localStorage.getItem("balance") === null)) {
       localStorage.setItem("balance", this.balance);
